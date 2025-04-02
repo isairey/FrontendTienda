@@ -1,26 +1,27 @@
 <template>
-    <div class="cart-page">
-      <h1>Carrito de Compras</h1>
-      <div v-if="cart.length === 0">
-        <p>El carrito está vacío.</p>
-      </div>
-      <ul v-else>
-        <li v-for="item in cart" :key="item.id">
-          {{ item.name }} (x{{ item.quantity }}) - ${{ item.price * item.quantity }}
-        </li>
-      </ul>
-      <button @click="$router.push('/')">Seguir comprando</button>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'CartPage',
-    props: {
-      cart: Array
-    }
-  };
-  </script>
+  <div class="product-page">
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <button @click="addProductToCart">Agregar al carrito</button>
+  </div>
+</template>
+
+<script setup>
+import { defineProps, defineEmits } from 'vue'
+
+// Recibe el producto como prop
+const props = defineProps({
+  product: Object
+})
+
+// Emitir evento para agregar al carrito
+const emit = defineEmits()
+
+const addProductToCart = () => {
+  emit('add-to-cart', props.product)
+}
+</script>
+
   
   <style scoped>
   .cart-page {
