@@ -1,5 +1,5 @@
 <template>
-    <div class="container my-4">
+    <div class="container my-4 product-list">
       <div v-if="filteredProducts.length > 0" class="row product-list">
         <div class="col-md-4 mb-3" v-for="product in filteredProducts" :key="product.id">
           <ProductCard :product="product" @add-to-cart="addToCart" />
@@ -69,4 +69,9 @@
     searchQuery.value = newQuery || ''
   })
   </script>
-  
+  <style scoped>
+  .product-list {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  </style>
