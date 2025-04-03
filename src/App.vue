@@ -1,61 +1,69 @@
 <template>
   <div class="app-container">
-    <!-- Header con carrito -->
-    <Header :cart="cart" />
+    <!-- Header con carrito (se oculta en login y registro) -->
+    <Header v-if="!route.meta.hideLayout" :cart="cart" />
 
     <div class="main-content">
-      <Sidebar />
+      <!-- Sidebar (se oculta en login y registro) -->
+      <Sidebar v-if="!route.meta.hideLayout" />
+      
       <router-view :cart="cart" @add-to-cart="addToCart" @remove-item="removeItem" />
     </div>
 
-    <Footer />
+    <!-- Footer (se oculta en login y registro) -->
+    <Footer v-if="!route.meta.hideLayout" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { reactive, onMounted } from 'vue'
+import { useRoute } from 'vue-router' // Importamos useRoute
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
 import Footer from './components/Footer.vue'
 
-const cart = ref([]) // Carrito de compras
+const route = useRoute() // Para detectar la ruta actual
+const cart = reactive([]) // Carrito de compras
 
-// Cargar el carrito desde localStorage al iniciar la aplicación
+// Cargar carrito desde localStorage
 const loadCart = () => {
   const storedCart = localStorage.getItem('cart')
   if (storedCart) {
-    cart.value = JSON.parse(storedCart)
+    const parsedCart = JSON.parse(storedCart)
+    parsedCart.forEach(item => {
+      if (!item.quantity) {
+        item.quantity = 1
+      }
+    })
+    Object.assign(cart, parsedCart)
   }
 }
 
-// Guardar el carrito en localStorage cuando cambia
+// Guardar carrito en localStorage cuando cambia
 const saveCart = () => {
-  localStorage.setItem('cart', JSON.stringify(cart.value))
+  localStorage.setItem('cart', JSON.stringify(cart))
 }
 
 // Agregar producto al carrito
 const addToCart = (product) => {
-  // Verificamos si el producto ya existe en el carrito
-  const existingProductIndex = cart.value.findIndex(item => item.id === product.id)
+  const existingProductIndex = cart.findIndex(item => item.id === product.id)
 
   if (existingProductIndex === -1) {
-    // Si no existe, lo agregamos
-    cart.value = [...cart.value, product]
+    cart.push({ ...product, quantity: 1 })
   } else {
-    // Si ya existe, actualizamos la cantidad o lo que necesites
-    // Puedes agregar lógica adicional para manejar la cantidad si es necesario.
+    cart[existingProductIndex].quantity += 1
   }
 
-  saveCart() // Guardar el carrito actualizado en localStorage
+  saveCart()
 }
 
 // Eliminar producto del carrito
 const removeItem = (index) => {
-  cart.value.splice(index, 1) // Eliminar el producto en el índice especificado
-  saveCart() // Guardar el carrito actualizado en localStorage
+  cart.splice(index, 1)
+  saveCart()
 }
 
-// Llamar a loadCart() cuando el componente se monta
+// Llamamos a loadCart() cuando el componente se monta
 onMounted(() => {
   loadCart()
 })

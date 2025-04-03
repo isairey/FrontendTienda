@@ -10,10 +10,13 @@ import Pinturas from '../views/Pinturas.vue';
 import Regalos from '../views/Regalos.vue';
 import Cart from '../views/Cart.vue';
 import Usuarios from '../views/Usuarios.vue';
-import SearchResults from '../views/Buscar.vue'
+import SearchResults from '../views/Buscar.vue';
+import Login from '../views/Login.vue';
+import Register from '../views/Registrer.vue';
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: Login,  meta: { hideLayout: true } },
+  { path: '/home', component: Home },
   { path: '/product/:id', component: ProductPage },
   { path: '/cartpage', component: CartPage },
   { path: '/ceramica', component: Ceramica },
@@ -24,7 +27,9 @@ const routes = [
   { path: '/regalos', component: Regalos },
   { path: '/cart', component: Cart },
   { path: '/search', component: SearchResults },
-  { path: '/profile', component: Usuarios }
+  { path: '/profile', component: Usuarios },
+  
+  { path: '/register', component: Register,  meta: { hideLayout: true } }
 ];
 
 const router = createRouter({
