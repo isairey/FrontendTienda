@@ -38,7 +38,7 @@ const login = async () => {
 
   try {
     // Enviar las credenciales al backend como JSON con POST
-    const response = await axios.post('http://localhost:8080/usuario/login', {
+    const response = await axios.post('https://apitienda-production-f2ba.up.railway.app/usuario/login', {
       correo: correo.value,
       password: password.value
     })
