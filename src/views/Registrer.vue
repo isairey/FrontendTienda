@@ -55,7 +55,7 @@ const errorMessage = ref('')
 
 const register = async () => {
   try {
-    const response = await axios.post('http://localhost:8080/usuario/guardar', {
+    const response = await axios.post('https://apitienda-production-f2ba.up.railway.app/usuario/guardar', {
   nombre: name.value,
   correo: email.value,
   password: password.value,
