@@ -35,7 +35,7 @@ onMounted(async () => {
   }
 
   try {
-    const response = await axios.get(`http://localhost:8080/usuario/datos?correo=${correoGuardado}`)
+    const response = await axios.get(`https://apitienda-production-f2ba.up.railway.app/usuario/datos?correo=${correoGuardado}`)
     const usuario = response.data
     nombre.value = usuario.nombre
     correo.value = usuario.correo
