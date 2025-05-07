@@ -2,7 +2,7 @@
   <header class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-4">
     <div class="d-flex align-items-center">
       <!-- Botón para mostrar/ocultar el sidebar -->
-      <button
+      <button 
         class="btn btn-success me-3"
         @click="toggleSidebar"
         :aria-expanded="sidebarOpen.toString()"
