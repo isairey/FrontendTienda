@@ -55,7 +55,7 @@
     }
   
     try {
-      const response = await axios.get(`http://localhost:8080/usuario/datos?correo=${correoGuardado}`)
+      const response = await axios.get(`https://apitienda-production-f2ba.up.railway.app/usuario/datos?correo=${correoGuardado}`)
       const usuario = response.data
       id.value = usuario.id // ← Guarda el ID para el PUT
       nombre.value = usuario.nombre
@@ -77,7 +77,7 @@
         password: password.value
       }
   
-      await axios.put(`http://localhost:8080/usuario/actualizar/${id.value}`, usuarioActualizado)
+      await axios.put(`https://apitienda-production-f2ba.up.railway.app/usuario/actualizar/${id.value}`, usuarioActualizado)
   
       mensaje.value = 'Perfil actualizado correctamente.'
       localStorage.setItem('usuario', JSON.stringify(usuarioActualizado))
