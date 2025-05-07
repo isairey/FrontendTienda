@@ -67,7 +67,7 @@ const products = ref([])
 // Obtener productos desde el backend
 const fetchProductos = async () => {
   try {
-    const response = await fetch('http://localhost:8080/producto/traer')
+    const response = await fetch('https://apitienda-production-f2ba.up.railway.app/producto/traer')
     const data = await response.json()
     products.value = data
   } catch (error) {
@@ -99,7 +99,7 @@ const addToCart = (product) => {
 
 const submitProduct = async () => {
   try {
-    const response = await fetch('http://localhost:8080/producto/guardar', {
+    const response = await fetch('https://apitienda-production-f2ba.up.railway.app/producto/guardar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newProduct.value)
