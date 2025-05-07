@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- Header con carrito (se oculta en login y registro) -->
     <Header v-if="!route.meta.hideLayout" :cart="cart" @toggle-sidebar="toggleSidebar" />
-
+<Index></Index>
     <div class="main-content">
       <!-- Sidebar (se oculta en login y registro) -->
       
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Footer (se oculta en login y registro) -->
-    <Footer v-if="!route.meta.hideLayout" />
+   <Footer v-if="!route.meta.hideLayout" />
   </div>
 </template>
 
@@ -25,6 +25,7 @@ import { useRoute } from 'vue-router'
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
 import Footer from './components/Footer.vue'
+
 
 const route = useRoute() // Para detectar la ruta actual
 const cart = reactive([]) // Carrito de compras
@@ -90,12 +91,11 @@ onMounted(() => {
   display: flex;
   flex: 1;
   overflow: hidden;
-  transition: margin-left 0.3s ease;
 }
 
 .content-container {
   flex: 1;
-  padding: 20px;
+ 
   transition: margin-left 0.3s ease;
 }
 
@@ -111,12 +111,13 @@ onMounted(() => {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
-  position: fixed;
-  top: 0;
-  left: -230px;
-  height: 100%;
-  transition: left 0.3s ease;
-  z-index: 1050;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  text-align: center;
 }
 
 /* Sidebar cuando está abierto */
@@ -124,11 +125,5 @@ onMounted(() => {
   left: 0; /* Sidebar visible */
 }
 
-/* Estilos del Footer */
-footer {
-  background-color: #333;
-  color: #fff;
-  padding: 10px 20px;
-  text-align: center;
-}
+
 </style>

@@ -3,26 +3,26 @@
     <div class="d-flex align-items-center">
       <!-- Botón para mostrar/ocultar el sidebar -->
       <button
-        class="btn btn-primary me-3"
+        class="btn btn-success me-3"
         @click="toggleSidebar"
         :aria-expanded="sidebarOpen.toString()"
       >
         ☰
       </button>
 
-      <button class="navbar-brand btn btn-link text-primary fw-bold fs-4" @click="goToHome">
+      <button class="navbar-brand btn btn-link text-success fw-bold fs-4" @click="goToHome">
         TimShop
       </button>
     </div>
 
     <div class="d-flex align-items-center flex-grow-1 justify-content-center">
       <input v-model="searchQuery" type="text" class="form-control me-2" placeholder="Buscar productos..." />
-      <button @click="searchProduct" class="btn btn-outline-primary">🔍</button>
+      <button @click="searchProduct" class="btn btn-outline-success">🔍</button>
     </div>
 
     <div class="d-flex">
       <button @click="goToUserProfile" class="btn btn-outline-secondary me-2">👤 Usuario</button>
-      <button @click="goToCart" class="btn btn-outline-primary">
+      <button @click="goToCart" class="btn btn-outline-success">
         🛒 Carrito ({{ cart.length }})
       </button>
     </div>
@@ -41,105 +41,106 @@
     </ul>
   </div>
 
-  <!-- Contenedor principal donde se adapta el contenido -->
+  <!-- Contenedor principal -->
   <div :class="['main-content', { 'content-expanded': sidebarOpen }]">
-    
+    <!-- Contenido adaptable -->
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
-  cart: Array, // Recibimos la prop cart, que es reactiva
-});
+  cart: Array,
+})
 
-const searchQuery = ref('');
-const router = useRouter();
-const sidebarOpen = ref(false); // Estado del sidebar
+const searchQuery = ref('')
+const router = useRouter()
+const sidebarOpen = ref(false)
 
 const searchProduct = () => {
-  router.push({ path: '/search', query: { query: searchQuery.value } });
-};
+  router.push({ path: '/search', query: { query: searchQuery.value } })
+}
 
-const goToHome = () => router.push('/home');
-const goToUserProfile = () => router.push('/profile');
-const goToCart = () => router.push('/cart'); // Redirige a la vista del carrito
+const goToHome = () => router.push('/home')
+
+const goToUserProfile = () => {
+  const logueado = localStorage.getItem('usuarioLogueado') === 'true'
+  if (logueado) {
+    router.push('/profile')
+  } else {
+    alert('Debes iniciar sesión para ver tu perfil')
+    router.push('/')
+  }
+}
+
+const goToCart = () => {
+  const logueado = localStorage.getItem('usuarioLogueado') === 'true'
+  if (logueado) {
+    router.push('/cart')
+  } else {
+    alert('Debes iniciar sesión para ver el carrito')
+    router.push('/')
+  }
+}
 
 const toggleSidebar = () => {
-  sidebarOpen.value = !sidebarOpen.value; // Cambiar el estado del sidebar
-};
+  sidebarOpen.value = !sidebarOpen.value
+}
 </script>
 
 <style scoped>
-/* Estilos generales */
+/* Header */
 header {
-  z-index: 1050; /* Asegura que el header esté sobre el sidebar */
+  z-index: 1050;
 }
 
-/* Estilo para el botón dentro del header */
+/* Botones */
 button {
   transition: background-color 0.3s ease;
 }
 
-/* Estilos del sidebar */
+.btn-success {
+  background-color: #48bb78; /* Verde suave */
+  border: none;
+  color: #ffffff; /* Blanco */
+}
+
+.btn-success:hover {
+  background-color: #38a169; /* Verde ligeramente más oscuro */
+}
+
+.btn-outline-success {
+  border-color: #48bb78; /* Borde verde */
+  color: #48bb78; /* Texto verde */
+}
+
+.btn-outline-success:hover {
+  background-color: #48bb78; /* Fondo verde */
+  color: #ffffff; /* Texto blanco */
+}
+
+/* Sidebar */
 .sidebar {
   width: 230px;
-  background-color: #f8f9fa;  /* Color más claro */
+  background-color: #f9fafb; /* Blanco suave */
   padding: 20px;
   position: fixed;
   top: 0;
-  left: -230px; /* Ocultamos el sidebar */
+  left: -230px;
   height: 100%;
   transition: left 0.3s ease;
   box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
-/* Cuando el sidebar está abierto */
 .sidebar-open {
-  left: 0;  /* Muestra el sidebar */
+  left: 0;
 }
 
-/* Ajusta el padding-left en el header cuando el sidebar está abierto */
-.sidebar-open ~ header {
-  padding-left: 230px; /* Da espacio al sidebar cuando está abierto */
-}
-
-/* Contenedor principal */
-.main-content {
-  transition: margin-left 0.3s ease; /* Transición suave */
-  margin-left: 0; /* Por defecto el contenido no tiene desplazamiento */
-  padding-top: 70px; /* Asegura que el contenido no quede debajo del header */
-}
-
-/* Cuando el sidebar está abierto */
-.content-expanded {
-  margin-left: 230px; /* Desplaza el contenido hacia la derecha cuando el sidebar está abierto */
-}
-
-/* Estilo para la barra de navegación */
-.navbar-brand {
-  font-weight: bold;
-}
-
-.navbar-nav .nav-link {
-  color: #333;
-}
-
-.navbar-nav .nav-link:hover {
-  color: #5cb85c;
-}
-
-/* Estilos de la barra de búsqueda */
-input.form-control {
-  max-width: 400px;
-}
-
-/* Estilos del sidebar */
 .sidebar h3 {
-  color: #333;
+  color: #4a4a4a; /* Gris suave */
   font-size: 20px;
   margin-bottom: 15px;
 }
@@ -155,7 +156,7 @@ input.form-control {
 
 .sidebar a {
   display: block;
-  color: #333;
+  color: #4a4a4a; /* Gris suave */
   text-decoration: none;
   font-size: 16px;
   padding: 8px;
@@ -164,6 +165,17 @@ input.form-control {
 }
 
 .sidebar a:hover {
-  background-color: #f1f1f1;
+  background-color: #e2e8f0; /* Fondo gris claro */
+}
+
+/* Main Content */
+.main-content {
+  transition: margin-left 0.3s ease;
+  margin-left: 0;
+  padding-top: 5px;
+}
+
+.content-expanded {
+  margin-left: 230px;
 }
 </style>

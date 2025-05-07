@@ -12,17 +12,18 @@ export default {
 
 <style scoped>
 footer {
-  background-color: #f3f9f3; /* Verde muy pálido, casi blanco */
-  color: #333; /* Texto oscuro para buen contraste */
-  padding: 6px 0;
-  font-weight: bold; /* Texto en negrita */
-  text-align: center;
-  font-size: 14px;
-  border-top: 2px solid #e1f0e1; /* Verde muy suave para el borde */
+  background-color: #fefefe; /* Blanco suave */
+  color: #006d77; /* Azul suave inicial */
+  padding: 10px 0; /* Espaciado */
+  font-weight: bold; /* Texto negrita */
+  text-align: center; /* Centramos el texto */
+  font-size: 14px; /* Tamaño del texto */
+  border-top: 3px solid #83c5be; /* Borde decorativo */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
 }
 
 footer:hover {
-  background-color: #eaf4ea; /* Un verde un poco más marcado para hover */
+  background-color: #e8f5f5; /* Fondo cambia a azul pastel */
+  color: #ff6f61; /* Texto cambia a un coral vibrante */
 }
-
 </style>

@@ -7,6 +7,12 @@
         <div v-if="successMessage" class="alert alert-success text-center">
           {{ successMessage }}
         </div>
+
+        <!-- Mensaje de error -->
+<div v-if="errorMessage" class="alert alert-danger text-center">
+  {{ errorMessage }}
+</div>
+
   
         <form @submit.prevent="register">
           <div class="mb-3">
@@ -21,6 +27,11 @@
             <label for="password" class="form-label text-muted">Contraseña</label>
             <input type="password" v-model="password" class="form-control" required />
           </div>
+          <div class="mb-3">
+  <label for="direccion" class="form-label text-muted">Dirección</label>
+  <input type="text" v-model="direccion" class="form-control" required />
+</div>
+
           <button type="submit" class="btn btn-success w-100">Registrarse</button>
         </form>
   
@@ -32,25 +43,47 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
-  
-  const name = ref('')
-  const email = ref('')
-  const password = ref('')
-  const successMessage = ref('') // Para mostrar el mensaje de éxito
-  
-  const register = () => {
-    console.log('Registrando usuario:', name.value, email.value, password.value)
-  
-    // Simular registro exitoso
+import { ref } from 'vue'
+import axios from 'axios'
+
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const direccion = ref('')
+const successMessage = ref('')
+const errorMessage = ref('')
+
+const register = async () => {
+  try {
+    const response = await axios.post('http://localhost:8080/usuario/guardar', {
+  nombre: name.value,
+  correo: email.value,
+  password: password.value,
+  direccion: direccion.value
+})
+
+
     successMessage.value = 'Registro exitoso ✅'
-  
-    // Ocultar el mensaje después de 3 segundos
+    name.value = ''
+    email.value = ''
+    password.value = ''
+    direccion.value = ''
+    errorMessage.value = ''
+
     setTimeout(() => {
       successMessage.value = ''
     }, 3000)
+
+  } catch (error) {
+    console.error(error)
+    errorMessage.value = 'Error al registrar. Inténtalo de nuevo.'
+    setTimeout(() => {
+      errorMessage.value = ''
+    }, 3000)
   }
-  </script>
+}
+</script>
+
   
   <style scoped>
   .register-container {

@@ -13,11 +13,17 @@ import Usuarios from '../views/Usuarios.vue';
 import SearchResults from '../views/Buscar.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Registrer.vue';
-import Editaru from '../views/EditarPerfil.vue';
-
+import About from '../Pages/About.vue';
+import Home2 from '../Pages/Home.vue';
+import Index from '../Pages/Index.vue';
+import Calculadora from '../Pages/Calculadora.vue';
+import Tienda from '../Pages/Tienda.vue';
+import Promp from '../Pages/Prom.vue';
+import Evento from '../Pages/Evento.vue';
 
 const routes = [
-  { path: '/', component: Login,  meta: { hideLayout: true } },
+  { path: '/', component: Home2},
+  { path: '/login', component: Login,  meta: { hideLayout: true } },
   { path: '/home', component: Home },
   { path: '/product/:id', component: ProductPage },
   { path: '/cartpage', component: CartPage },
@@ -30,7 +36,11 @@ const routes = [
   { path: '/cart', component: Cart },
   { path: '/search', component: SearchResults },
   { path: '/profile', component: Usuarios },
-  { path: '/editaru', component: Editaru },
+  { path: '/about', component: About},
+  { path: '/tienda', component: Tienda},
+  { path: '/calculadora', component: Calculadora},
+  { path: '/prom', component: Promp},
+  { path: '/evento', component: Evento},
   { path: '/register', component: Register,  meta: { hideLayout: true } }
 ];
 
@@ -40,3 +50,4 @@ const router = createRouter({
 });
 
 export default router;
+
