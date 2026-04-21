@@ -47,11 +47,11 @@ La estructura del proyecto está organizada de la siguiente manera:
 
 1. Clona este repositorio en tu máquina local:
     ```bash
-    git clone https://github.com/isaireyesp1/Desarrollo_Aguil_Vue.git
+    git clone https://github.com/isairey/FrontendTienda.git
     ```
 2. Navega al directorio del proyecto:
     ```bash
-    cd fundamentosVue
+    cd FrontendTienda
     ```
 3. Instala las dependencias:
     ```bash
