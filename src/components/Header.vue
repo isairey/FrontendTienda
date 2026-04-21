@@ -1,88 +1,99 @@
 <template>
-  <header class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-4">
+  <header class="navbar navbar-expand-lg px-4 glass-header">
     <div class="d-flex align-items-center">
       <!-- Botón para mostrar/ocultar el sidebar -->
       <button 
-        class="btn btn-success me-3"
+        class="glass-btn btn-icon me-3"
         @click="toggleSidebar"
-        :aria-expanded="sidebarOpen.toString()"
       >
-        ☰
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
 
-      <button class="navbar-brand btn btn-link text-success fw-bold fs-4" @click="goToHome">
-        TimShop
+      <button class="navbar-brand btn btn-link store-brand fw-bold fs-4 text-decoration-none" @click="goToHome">
+        <span class="brand-text">Tim</span>Shop
       </button>
     </div>
 
-    <div class="d-flex align-items-center flex-grow-1 justify-content-center">
-      <input v-model="searchQuery" type="text" class="form-control me-2" placeholder="Buscar productos..." />
-      <button @click="searchProduct" class="btn btn-outline-success">🔍</button>
+    <div class="d-flex align-items-center flex-grow-1 justify-content-center px-4">
+      <div class="search-bar-glass d-flex w-100" style="max-width: 500px">
+        <input v-model="searchQuery" type="text" class="form-control glass-input" placeholder="Buscar productos..." @keyup.enter="searchProduct" />
+        <button @click="searchProduct" class="glass-btn ms-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+      </div>
     </div>
 
-    <div class="d-flex">
-      <button @click="goToUserProfile" class="btn btn-outline-secondary me-2">👤 Usuario</button>
-      <button @click="goToCart" class="btn btn-outline-success">
-        🛒 Carrito ({{ cart.length }})
+    <div class="d-flex align-items-center">
+      <button @click="goToUserProfile" class="glass-btn text-icon me-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span class="d-none d-md-inline">Perfil</span>
+      </button>
+      <button @click="goToCart" class="glass-btn cart-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span class="cart-badge">{{ store.cart.length }}</span>
+      </button>
+      <button v-if="store.userLogueado" @click="handleLogout" class="glass-btn ms-2 danger-glass text-icon" title="Cerrar Sessión">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
       </button>
     </div>
   </header>
 
-  <!-- Sidebar -->
-  <div :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
-    <h3>Categorías</h3>
-    <ul>
-      <li><router-link to="/ceramica">Cerámica</router-link></li>
-      <li><router-link to="/joyeria">Joyería</router-link></li>
-      <li><router-link to="/textiles">Textiles</router-link></li>
-      <li><router-link to="/madera">Madera</router-link></li>
-      <li><router-link to="/pinturas">Pinturas</router-link></li>
-      <li><router-link to="/regalos">Regalos</router-link></li>
-    </ul>
-  </div>
+  <!-- Backdrop para Sidebar -->
+  <div v-if="sidebarOpen" class="sidebar-backdrop" @click="toggleSidebar"></div>
 
-  <!-- Contenedor principal -->
-  <div :class="['main-content', { 'content-expanded': sidebarOpen }]">
-    <!-- Contenido adaptable -->
+  <!-- Sidebar Glass -->
+  <div :class="['sidebar-glass', { 'sidebar-open': sidebarOpen }]">
+    <div class="sidebar-header d-flex justify-content-between align-items-center mb-4">
+      <h3 class="m-0 liquid-text">Categorías</h3>
+      <button class="glass-btn btn-icon btn-sm" @click="toggleSidebar">✕</button>
+    </div>
+    <ul class="category-list">
+      <li v-for="cat in store.categories" :key="cat.id">
+         <router-link :to="'/categoria/' + cat.id" @click="sidebarOpen = false">
+            <span class="cat-icon me-2">✧</span> {{ cat.name }}
+         </router-link>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-
-const props = defineProps({
-  cart: Array,
-})
+import { store, logout } from '../store/globalStore'
 
 const searchQuery = ref('')
 const router = useRouter()
 const sidebarOpen = ref(false)
 
 const searchProduct = () => {
-  router.push({ path: '/search', query: { query: searchQuery.value } })
+  if (searchQuery.value.trim() !== '') {
+    router.push({ path: '/search', query: { query: searchQuery.value } })
+    searchQuery.value = ''
+  }
 }
 
 const goToHome = () => router.push('/home')
 
 const goToUserProfile = () => {
-  const logueado = localStorage.getItem('usuarioLogueado') === 'true'
-  if (logueado) {
+  if (store.userLogueado) {
     router.push('/profile')
   } else {
-    alert('Debes iniciar sesión para ver tu perfil')
     router.push('/')
   }
 }
 
 const goToCart = () => {
-  const logueado = localStorage.getItem('usuarioLogueado') === 'true'
-  if (logueado) {
+  if (store.userLogueado) {
     router.push('/cart')
   } else {
-    alert('Debes iniciar sesión para ver el carrito')
     router.push('/')
   }
+}
+
+const handleLogout = () => {
+  logout()
+  router.push('/')
 }
 
 const toggleSidebar = () => {
@@ -91,91 +102,159 @@ const toggleSidebar = () => {
 </script>
 
 <style scoped>
-/* Header */
-header {
-  z-index: 1050;
+/* Header Custom Glass */
+.glass-header {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1040;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
 }
 
-/* Botones */
-button {
-  transition: background-color 0.3s ease;
+.store-brand {
+  color: #2d3748 !important;
+  font-family: 'Inter', sans-serif;
+}
+.brand-text {
+  color: #48bb78;
 }
 
-.btn-success {
-  background-color: #48bb78; /* Verde suave */
-  border: none;
-  color: #ffffff; /* Blanco */
+/* Base Glass Button */
+.glass-btn {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  color: #4a5568;
+  padding: 8px 16px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
-.btn-success:hover {
-  background-color: #38a169; /* Verde ligeramente más oscuro */
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.btn-outline-success {
-  border-color: #48bb78; /* Borde verde */
-  color: #48bb78; /* Texto verde */
+.btn-icon {
+  padding: 8px;
 }
 
-.btn-outline-success:hover {
-  background-color: #48bb78; /* Fondo verde */
-  color: #ffffff; /* Texto blanco */
+.danger-glass:hover {
+  color: #e53e3e;
+  border-color: #fc8181;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 230px;
-  background-color: #f9fafb; /* Blanco suave */
-  padding: 20px;
+.cart-btn {
+  position: relative;
+  border-color: rgba(72, 187, 120, 0.4);
+  color: #38a169;
+}
+.cart-btn:hover {
+  background: rgba(72, 187, 120, 0.1);
+}
+
+.cart-badge {
+  background: #48bb78;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 6px;
+}
+
+/* Glass Input */
+.glass-input {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  padding: 10px 16px;
+}
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.2) !important;
+  border-color: #48bb78 !important;
+}
+
+/* Sidebar Glass */
+.sidebar-backdrop {
   position: fixed;
   top: 0;
-  left: -230px;
-  height: 100%;
-  transition: left 0.3s ease;
-  box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  z-index: 1045;
+}
+
+.sidebar-glass {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 20px;
+  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1050;
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-open {
   left: 0;
 }
 
-.sidebar h3 {
-  color: #4a4a4a; /* Gris suave */
-  font-size: 20px;
-  margin-bottom: 15px;
+.liquid-text {
+  background: linear-gradient(135deg, #2d3748 0%, #48bb78 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
 }
 
-.sidebar ul {
+.category-list {
   list-style: none;
   padding: 0;
+  margin-top: 20px;
 }
 
-.sidebar li {
-  margin-bottom: 10px;
+.category-list li {
+  margin-bottom: 8px;
 }
 
-.sidebar a {
-  display: block;
-  color: #4a4a4a; /* Gris suave */
+.category-list a {
+  display: flex;
+  align-items: center;
+  color: #4a5568;
   text-decoration: none;
   font-size: 16px;
-  padding: 8px;
-  border-radius: 8px;
-  transition: background-color 0.3s;
+  font-weight: 500;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: transparent;
 }
 
-.sidebar a:hover {
-  background-color: #e2e8f0; /* Fondo gris claro */
+.category-list a:hover, .category-list a.router-link-active {
+  background: rgba(72, 187, 120, 0.1);
+  color: #2f855a;
+  transform: translateX(4px);
 }
 
-/* Main Content */
-.main-content {
-  transition: margin-left 0.3s ease;
-  margin-left: 0;
-  padding-top: 5px;
-}
-
-.content-expanded {
-  margin-left: 230px;
+.cat-icon {
+  color: #48bb78;
+  font-size: 18px;
 }
 </style>

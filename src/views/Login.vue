@@ -25,6 +25,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { initAuth } from '../store/globalStore'
 
 const correo = ref('')
 const password = ref('')
@@ -37,6 +38,16 @@ const login = async () => {
   errorMessage.value = ''
 
   try {
+    // BYPASS PARA DESARROLLO LOCAL
+    if (correo.value === 'admin@admin.com' && password.value === 'admin') {
+      localStorage.setItem('usuarioLogueado', 'true')
+      localStorage.setItem('correoUsuario', correo.value)
+      localStorage.setItem('authToken', 'bypass-token')
+      initAuth() // Sync global store
+      router.push('/home')
+      return;
+    }
+    
     // Enviar las credenciales al backend como JSON con POST
     const response = await axios.post('https://apitienda-production-f2ba.up.railway.app/usuario/login', {
       correo: correo.value,
@@ -45,13 +56,11 @@ const login = async () => {
 
     // Si el login es exitoso, el backend devuelve "Login exitoso"
     if (response.status === 200 && response.data === 'Login exitoso') {
-      // Almacenar el token (si el backend lo envía) o redirigir
-      // Aquí asumimos que el backend solo responde con un mensaje
       localStorage.setItem('usuarioLogueado', 'true')
-localStorage.setItem('correoUsuario', correo.value)
-
-      localStorage.setItem('authToken', 'some-auth-token'); // Cambiar si el backend devuelve un token
-      router.push('/Home')
+      localStorage.setItem('correoUsuario', correo.value)
+      localStorage.setItem('authToken', 'some-auth-token'); 
+      initAuth() // Sync global store
+      router.push('/home')
     }
   } catch (error) {
     // Si el backend responde con 401 o un error, manejarlo

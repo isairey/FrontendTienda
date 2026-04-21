@@ -21,6 +21,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { store, logout as globalLogout } from '../store/globalStore'
 
 const router = useRouter()
 
@@ -28,23 +29,28 @@ const nombre = ref('')
 const correo = ref('')
 
 onMounted(async () => {
-  const correoGuardado = localStorage.getItem('correoUsuario')
-  if (!correoGuardado) {
+  if (!store.userLogueado) {
     router.push('/')
     return
   }
 
+  const correoGuardado = store.userCorreo
   try {
     const response = await axios.get(`https://apitienda-production-f2ba.up.railway.app/usuario/datos?correo=${correoGuardado}`)
     const usuario = response.data
     nombre.value = usuario.nombre
     correo.value = usuario.correo
 
-    // Opcional: actualizar el localStorage con los datos completos
     localStorage.setItem('usuario', JSON.stringify(usuario))
   } catch (error) {
     console.error('Error al obtener datos del usuario:', error)
-    router.push('/') // Redirige si hay error
+    // For local mock / bypass
+    if (correoGuardado === 'admin@admin.com') {
+      nombre.value = 'Administrador'
+      correo.value = correoGuardado
+    } else {
+      router.push('/')
+    }
   }
 })
 
@@ -53,9 +59,8 @@ const editProfile = () => {
 }
 
 const logout = () => {
+  globalLogout()
   localStorage.removeItem('usuario')
-  localStorage.removeItem('usuarioLogueado')
-  localStorage.removeItem('correoUsuario')
   router.push('/')
 }
 </script>
