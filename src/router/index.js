@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import ProductPage from '../views/ProductPage.vue';
-import CartPage from '../views/CartPage.vue';
 import Categorias from '../views/Categorias.vue';
 import Cart from '../views/Cart.vue';
 import Usuarios from '../views/Usuarios.vue';
@@ -15,7 +14,6 @@ const routes = [
   { path: '/', component: Login, meta: { hideLayout: true } },
   { path: '/home', component: Home },
   { path: '/product/:id', component: ProductPage },
-  { path: '/cartpage', component: CartPage },
   { path: '/categoria/:id', component: Categorias },
   { path: '/cart', component: Cart, meta: { requiresAuth: true } },
   { path: '/search', component: SearchResults },
